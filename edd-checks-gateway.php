@@ -17,6 +17,19 @@ if( class_exists( 'EDD_License' ) && is_admin() ) {
 	$edd_checks_license = new EDD_License( __FILE__, 'Check Payment Gateway', '1.1.1', 'Pippin Williamson', 'eddcg_license_key' );
 }
 
+/**
+ * Internationalization
+ *
+ * @access      public
+ * @since       1.2
+ * @return      void
+ */
+function edd_textdomain() {
+	load_plugin_textdomain( 'eddcg', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
+}
+add_action( 'init', 'edd_textdomain' );
+
+
 
 /**
  * Register the payment gateway
