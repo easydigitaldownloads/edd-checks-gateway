@@ -201,7 +201,9 @@ function eddcg_send_payment_instructions_email( $payment_id = 0 ) {
 
 	$user_info = edd_get_payment_meta_user_info( $payment_id );
 
-	EDD()->emails->send( $user_info['email'], $subject, $email_body );
+	$email = new EDD_Emails;
+
+	$email->send( $user_info['email'], $subject, $email_body );
 }
 
 
