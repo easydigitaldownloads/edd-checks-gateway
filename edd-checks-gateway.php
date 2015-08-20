@@ -197,13 +197,13 @@ function eddcg_send_payment_instructions_email( $payment_id = 0 ) {
 
 	$email_body = edd_do_email_tags( $email_body, $payment_id );
 
-	$subject = edd_get_option( 'eddcg_pending_email_subject' , __( 'Your purchase is pending payment', 'eddcg' ) );
+	$subject = edd_do_email_tags( edd_get_option( 'eddcg_pending_email_subject' , __( 'Your purchase is pending payment', 'eddcg' ) ), $payment_id );
 
 	$user_info = edd_get_payment_meta_user_info( $payment_id );
 
-	$email = new EDD_Emails;
+	EDD()->emails->heading = edd_do_email_tags( edd_get_option( 'eddcg_pending_email_heading', false ), $payment_id );
 
-	$email->send( $user_info['email'], $subject, $email_body );
+	EDD()->emails->send( $user_info['email'], $subject, $email_body );
 }
 
 
@@ -253,6 +253,12 @@ function eddcg_add_email_settings( $settings ) {
 			'id'      => 'eddcg_pending_email_subject',
 			'name'    => __( 'Payment Instructions Email Subject', 'eddcg' ),
 			'desc'    => __( 'The subject line for the Payment Instructions Email.', 'eddcg' ),
+			'type'    => 'text'
+		),
+		array(
+			'id'      => 'eddcg_pending_email_heading',
+			'name'    => __( 'Payment Instructions Email Heading', 'eddcg' ),
+			'desc'    => __( 'The heading for the Payment Instructions Email body.', 'eddcg' ),
 			'type'    => 'text'
 		),
 		array(
