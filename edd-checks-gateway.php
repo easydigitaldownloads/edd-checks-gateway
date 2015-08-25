@@ -3,8 +3,8 @@
 Plugin Name: Easy Digital Downloads - Check Payment Gateway
 Plugin URL: http://easydigitaldownloads.com/extension/checks-gateway
 Description: Adds a payment gateway for accepting manual payments through hand-written Checks
-Version: 1.2
-Author: Pippin Williamson
+Version: 1.3
+Author: Easy Digital Downloads Team
 Author URI: http://pippinsplugins.com
 Contributors: mordauk
 */
@@ -14,7 +14,7 @@ if(!defined('EDDCG_PLUGIN_DIR')) {
 }
 
 if( class_exists( 'EDD_License' ) && is_admin() ) {
-	$edd_checks_license = new EDD_License( __FILE__, 'Check Payment Gateway', '1.2', 'Pippin Williamson', 'eddcg_license_key' );
+	$edd_checks_license = new EDD_License( __FILE__, 'Check Payment Gateway', '1.3', 'Easy Digital Downloads', 'eddcg_license_key' );
 }
 
 /**
