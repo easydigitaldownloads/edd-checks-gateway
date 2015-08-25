@@ -112,6 +112,7 @@ function eddcg_process_payment($purchase_data) {
 
 	if( $payment ) {
 		edd_cg_send_admin_notice( $payment );
+		eddcg_send_payment_instructions_email( $payment );
 		edd_empty_cart();
 		edd_send_to_success_page();
 	} else {
@@ -181,6 +182,32 @@ function edd_cg_send_admin_notice( $payment_id = 0 ) {
 
 
 /**
+ * Sends the payment instructions email to the customer
+ *
+ * @since 1.3
+ * @return void
+ */
+function eddcg_send_payment_instructions_email( $payment_id = 0 ) {
+
+	$email_body = edd_get_option( 'eddcg_pending_email' );
+
+	if ( empty ( $email_body ) ) {
+		return;
+	}
+
+	$email_body = edd_do_email_tags( $email_body, $payment_id );
+
+	$subject = edd_do_email_tags( edd_get_option( 'eddcg_pending_email_subject' , __( 'Your purchase is pending payment', 'eddcg' ) ), $payment_id );
+
+	$user_info = edd_get_payment_meta_user_info( $payment_id );
+
+	EDD()->emails->heading = edd_do_email_tags( edd_get_option( 'eddcg_pending_email_heading', false ), $payment_id );
+
+	EDD()->emails->send( $user_info['email'], $subject, $email_body );
+}
+
+
+/**
  * Register gateway settings
  *
  * @since  1.0
@@ -198,7 +225,7 @@ function eddcg_add_settings($settings) {
 		array(
 			'id'      => 'eddcg_checkout_notes',
 			'name'    => __('Check Payment Instructions', 'eddcg'),
-			'desc'    => __('Enter the instructions you want to show to the buyer during the checkout process here. This should probably include your mailing address and who to make the check out to.', 'eddcg'),
+			'desc'    => sprintf( __( 'Enter the instructions you want to show to the buyer during the checkout process here. This should probably include your mailing address and who to make the check out to. Configure email settings <a href="%s">here</a>.', 'eddcg' ), esc_url( admin_url( '/edit.php?post_type=download&page=edd-settings&tab=emails' ) ) ),
 			'type'    => 'rich_editor'
 		)
 	);
@@ -206,3 +233,41 @@ function eddcg_add_settings($settings) {
 	return array_merge( $settings, $check_settings );
 }
 add_filter( 'edd_settings_gateways', 'eddcg_add_settings' );
+
+
+/**
+ * Registers the email settings
+ *
+ * @since 1.3
+ * @return array
+ */
+function eddcg_add_email_settings( $settings ) {
+	$email_settings = array(
+		array(
+			'id'      => 'check_payment_email_settings',
+			'name'    => '<strong>' . __( 'Check Payment Notification', 'eddcg' ) . '</strong>',
+			'desc'    => __( 'Configure the Check Payment settings', 'eddcg' ),
+			'type'    => 'header'
+		),
+		array(
+			'id'      => 'eddcg_pending_email_subject',
+			'name'    => __( 'Payment Instructions Email Subject', 'eddcg' ),
+			'desc'    => __( 'The subject line for the Payment Instructions Email.', 'eddcg' ),
+			'type'    => 'text'
+		),
+		array(
+			'id'      => 'eddcg_pending_email_heading',
+			'name'    => __( 'Payment Instructions Email Heading', 'eddcg' ),
+			'desc'    => __( 'The heading for the Payment Instructions Email body.', 'eddcg' ),
+			'type'    => 'text'
+		),
+		array(
+			'id'      => 'eddcg_pending_email',
+			'name'    => __( 'Payment Instructions Email Body', 'eddcg' ),
+			'desc'    => sprintf( __( 'Enter the instructions you want to email to the buyer after the checkout process. This should probably include your mailing address and who to make the check out to. Available template tags: <br> %s ' ), edd_get_emails_tags_list() ),
+			'type'    => 'rich_editor'
+		)
+	);
+	return array_merge( $settings, $email_settings );
+}
+add_filter( 'edd_settings_emails', 'eddcg_add_email_settings' );
