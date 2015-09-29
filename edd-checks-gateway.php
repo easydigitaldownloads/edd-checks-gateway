@@ -113,7 +113,9 @@ function eddcg_process_payment($purchase_data) {
 
 	if ( $payment ) {
 		edd_cg_send_admin_notice( $payment );
+		add_filter( 'edd_email_show_links', '__return_false' );
 		eddcg_send_payment_instructions_email( $payment );
+		add_filter( 'edd_email_show_links', '__return_true' );
 		edd_empty_cart();
 		edd_send_to_success_page();
 	} else {
