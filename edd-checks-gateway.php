@@ -233,6 +233,10 @@ function eddcg_add_settings($settings) {
 		),
 	);
 
+	if ( version_compare( EDD_VERSION, 2.5, '>=' ) ) {
+		$check_settings = array( 'checks' => $check_settings );
+	}
+
 	return array_merge( $settings, $check_settings );
 }
 add_filter( 'edd_settings_gateways', 'eddcg_add_settings' );
@@ -271,6 +275,23 @@ function eddcg_add_email_settings( $settings ) {
 			'type'    => 'rich_editor',
 		),
 	);
+
+	if ( version_compare( EDD_VERSION, 2.5, '>=' ) ) {
+		$email_settings = array( 'checks' => $email_settings );
+	}
+
 	return array_merge( $settings, $email_settings );
 }
 add_filter( 'edd_settings_emails', 'eddcg_add_email_settings' );
+
+
+/**
+ * Registers the settings section for EDD 2.5+
+ */
+function eddcg_add_settings_section( $sections ) {
+	// return array_merge( $sections, array( 'checks' => __( 'Checks', 'eddcg' ) ) );
+	$sections['checks'] = __( 'Checks', 'eddcg' );
+	return $sections;
+}
+add_filter( 'edd_settings_sections_gateways', 'eddcg_add_settings_section' );
+add_filter( 'edd_settings_sections_emails', 'eddcg_add_settings_section' );
