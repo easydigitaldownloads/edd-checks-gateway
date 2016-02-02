@@ -289,7 +289,6 @@ add_filter( 'edd_settings_emails', 'eddcg_add_email_settings' );
  * Registers the settings section for EDD 2.5+
  */
 function eddcg_add_settings_section( $sections ) {
-	// return array_merge( $sections, array( 'checks' => __( 'Checks', 'eddcg' ) ) );
 	$sections['checks'] = __( 'Checks', 'eddcg' );
 	return $sections;
 }
