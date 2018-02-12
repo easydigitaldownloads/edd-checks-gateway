@@ -112,7 +112,7 @@ function eddcg_process_payment($purchase_data) {
 	$payment = edd_insert_payment( $payment );
 
 	if ( $payment ) {
-		eddcg_send_admin_notification_email( $payment );
+		edd_cg_send_admin_notice( $payment );
 		add_filter( 'edd_email_show_links', '__return_false' );
 		eddcg_send_payment_instructions_email( $payment );
 		add_filter( 'edd_email_show_links', '__return_true' );
@@ -159,7 +159,7 @@ function eddcg_send_payment_instructions_email( $payment_id = 0 ) {
  * @since 1.3.3
  * @return void
  */
-function eddcg_send_admin_notification_email( $payment_id = 0 ) {
+function edd_cg_send_admin_notice( $payment_id = 0 ) {
 
 	$email_body = edd_get_option( 'eddcg_admin_email' );
 
