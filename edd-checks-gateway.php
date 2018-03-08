@@ -161,6 +161,8 @@ function eddcg_send_payment_instructions_email( $payment_id = 0 ) {
  */
 function edd_cg_send_admin_notice( $payment_id = 0 ) {
 
+	$admin_email = edd_get_admin_notice_emails();
+
 	$email_body = edd_get_option( 'eddcg_admin_email' );
 
 	if ( empty ( $email_body ) ) {
@@ -171,11 +173,9 @@ function edd_cg_send_admin_notice( $payment_id = 0 ) {
 
 	$subject = edd_do_email_tags( edd_get_option( 'eddcg_admin_email_subject' , __( 'New pending payment', 'eddcg' ) ), $payment_id );
 
-	$user_info = edd_get_payment_meta_user_info( $payment_id );
-
 	EDD()->emails->heading = edd_do_email_tags( edd_get_option( 'eddcg_admin_email_heading', false ), $payment_id );
 
-	EDD()->emails->send( $user_info['email'], $subject, $email_body );
+	EDD()->emails->send( $admin_email, $subject, $email_body );
 }
 
 
